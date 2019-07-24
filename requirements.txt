@@ -3,7 +3,6 @@ JPype1==0.5.7
 Pillow==2.7.0
 Scrapy==0.24.4
 Twisted==14.0.2
-boilerpipe==1.2.0.0
 cffi==0.8.6
 characteristic==14.3.0
 charade==1.0.3

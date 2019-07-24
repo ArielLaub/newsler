@@ -1,13 +1,12 @@
 # This middleware can be used to avoid re-visiting already visited items, which can be useful for speeding up the scraping for projects with immutable items, ie. items that, once scraped, don't change.
 
-from scrapy import log
-from scrapy.contrib.downloadermiddleware.useragent import UserAgentMiddleware
+from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
 from scrapy.http import Request
 from scrapy.item import BaseItem
 from scrapy.utils.request import request_fingerprint
 
 from items import NewsItem
-
+import logging as log
 import random
 
 

@@ -1,6 +1,6 @@
 from __future__ import absolute_import
-from scrapy.contrib.spiders import CrawlSpider, Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.spiders import CrawlSpider, Rule
+from scrapy.linkextractors import LinkExtractor
 from scrapy.selector import HtmlXPathSelector
 from newscrawler.items import NewsItem as GooseItem
 
@@ -34,7 +34,7 @@ class NewsSpider(CrawlSpider):
                 restrict_xpaths_r = [rx for rx in rule["restrict_xpaths"]]
 
             NewsSpider.rules.append(Rule(
-                SgmlLinkExtractor(
+                LinkExtractor(
                     allow=allow_r,
                     deny=deny_r,
                     restrict_xpaths=restrict_xpaths_r,

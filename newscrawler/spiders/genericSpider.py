@@ -1,9 +1,8 @@
 from urlparse import urlparse
 
 from scrapy.http import Request, HtmlResponse
-from scrapy.spider import BaseSpider
-from scrapy.selector import HtmlXPathSelector
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy import Spider as BaseSpider
+from scrapy.linkextractors import LinkExtractor
 
 from newscrawler.items import Page
 
@@ -18,7 +17,7 @@ class FollowAllSpider(BaseSpider):
             url = 'http://%s/' % url
         self.url = url
         self.allowed_domains = [urlparse(url).hostname.lstrip('www.')]
-        self.link_extractor = SgmlLinkExtractor()
+        self.link_extractor = LinkExtractor()
         self.cookies_seen = set()
 
     def start_requests(self):
@@ -54,7 +53,7 @@ class FollowAllSpider(BaseSpider):
 
     def _set_title(self, page, response):
         if isinstance(response, HtmlResponse):
-            title = HtmlXPathSelector(response).select("//title/text()").extract()
+            title = response.xpath("//title/text()").extract()
             if title:
                 page['title'] = title[0]
 

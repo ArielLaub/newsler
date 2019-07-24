@@ -1,7 +1,7 @@
 {
 	"allowed_domains" : ["cnbc.com"],
 	"start_urls": [
-		"http://data.cnbc.com/quotes/IBM"
+		"https://www.cnbc.com/quotes/?symbol=IBM"
 	],
 	"rules": [
 		{

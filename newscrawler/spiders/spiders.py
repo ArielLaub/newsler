@@ -1,7 +1,6 @@
-from scrapy.contrib.spiders import CrawlSpider, Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import HtmlXPathSelector
-from scrapy import log
+from scrapy.spiders import CrawlSpider, Rule
+from scrapy.linkextractors import LinkExtractor
+import logging as log
 import os
 
 from newscrawler.items import NewsItem
@@ -29,7 +28,7 @@ class NewsSpider(CrawlSpider):
 
     name = "NewsSpider"
 
-    rules = []
+    _rules = []
 
     def __init__(self, **kw):
         src_json = kw.get('src_json') or 'sources/sample.json'
@@ -53,8 +52,8 @@ class NewsSpider(CrawlSpider):
             if "restrict_xpaths" in rule.keys():
                 restrict_xpaths_r = [rx for rx in rule["restrict_xpaths"]]
 
-            NewsSpider.rules.append(Rule(
-                SgmlLinkExtractor(
+            NewsSpider._rules.append(Rule(
+                LinkExtractor(
                     allow=allow_r,
                     deny=deny_r,
                     restrict_xpaths=restrict_xpaths_r,
@@ -86,7 +85,6 @@ class NewsSpider(CrawlSpider):
         if str(response.url) not in self.OLD_URLS:
             self.log("Scraping: %s" % response.url, level=log.INFO)
 
-            hxs = HtmlXPathSelector(response)
 
             item = NewsItem()
 
@@ -96,15 +94,15 @@ class NewsSpider(CrawlSpider):
 
             item['title'] = None
             for title_path in self.CONT_PATHS["title"]:
-                item['title'] = item['title'] or hxs.xpath(title_path).extract()
+                item['title'] = item['title'] or response.xpath(title_path).extract()
 
             item['date'] = None
             for date_path in self.CONT_PATHS["date"]:
-                item['date'] = item['date'] or hxs.xpath(date_path).extract()
+                item['date'] = item['date'] or response.xpath(date_path).extract()
 
             div = None
             for div_path in self.CONT_PATHS["text"]:
-                div = div or hxs.xpath(div_path)
+                div = div or response.xpath(div_path)
 
             text = re.sub('\s+', ' ', ' '.join(div.extract())).strip().replace("\"", "'")
 
